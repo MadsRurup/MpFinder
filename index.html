@@ -29,15 +29,21 @@
                         style="height: 650px"
                     >
                         <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center"><h3 class="text-center mb-4">MP Link Finder</h3>
-                            <div><h6>Check Interval</h6> <input
-                                    onchange="updateInterval()"
-                                    type="number"
-                                    id="interval"
-                                    class="form-control mw-50"
-                                    value="200"
-                                /></div></div>
-                            
+                            <div
+                                class="d-flex justify-content-between align-items-center"
+                            >
+                                <h3 class="text-center mb-4">MP Link Finder</h3>
+                                <div>
+                                    <h6>Check Interval</h6>
+                                    <input
+                                        onchange="updateInterval()"
+                                        type="number"
+                                        id="interval"
+                                        class="form-control mw-50"
+                                        value="200"
+                                    />
+                                </div>
+                            </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Lobby Name</label>
@@ -98,9 +104,19 @@
                             </div>
 
                             <div id="dateForm" class="mb-3">
-                                <label class="form-label"
-                                    >Select Date & Time</label
-                                >
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="form-label"
+                                        >Select Date & Time</label
+                                    >
+                                    <span
+                                        ><label>Backwards</label>
+                                        <input
+                                        onchange="backwards = !backwards"
+                                            type="checkbox"
+                                            id="backwards"
+                                            checked
+                                    /></span>
+                                </div>
                                 <input
                                     type="datetime-local"
                                     id="date"
@@ -161,9 +177,10 @@
         </div>
 
         <script>
-            let interval = document.getElementById("interval").value
+            let backwards = true;
+            let interval = document.getElementById("interval").value;
             function updateInterval() {
-                interval = document.getElementById("interval").value
+                interval = document.getElementById("interval").value;
             }
             document
                 .getElementById("idSelect")
@@ -322,7 +339,15 @@
 
             async function checkFromId(start, retries) {
                 for (let i = 0; i < retries; i++) {
-                    let currentId = start + i;
+                    let currentId = null;
+                    const selected = document.querySelector(
+                    'input[name="scrapeMethod"]:checked',
+                );
+                    if (backwards && selected.value == "date") {
+                        currentId = start - i;
+                        console.log("test");
+                    } else {currentId = start + i;}
+                    
                     const found = await checkMatch(currentId);
 
                     if (found) {
