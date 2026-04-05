@@ -29,7 +29,15 @@
                         style="height: 650px"
                     >
                         <div class="card-body p-4">
-                            <h3 class="text-center mb-4">MP Link Finder</h3>
+                            <div class="d-flex justify-content-between align-items-center"><h3 class="text-center mb-4">MP Link Finder</h3>
+                            <div><h6>Check Interval</h6> <input
+                                    onchange="updateInterval()"
+                                    type="number"
+                                    id="interval"
+                                    class="form-control mw-50"
+                                    value="200"
+                                /></div></div>
+                            
 
                             <div class="mb-3">
                                 <label class="form-label">Lobby Name</label>
@@ -153,6 +161,10 @@
         </div>
 
         <script>
+            let interval = document.getElementById("interval").value
+            function updateInterval() {
+                interval = document.getElementById("interval").value
+            }
             document
                 .getElementById("idSelect")
                 .addEventListener("click", updateSelection);
@@ -298,7 +310,7 @@
                     }
 
                     // rate limit safety
-                    await new Promise((r) => setTimeout(r, 250));
+                    await new Promise((r) => setTimeout(r, interval));
                 }
                 const parent = document.createElement("div");
                 const paragraf = document.createElement("p");
@@ -319,7 +331,7 @@
                     }
 
                     // small delay to avoid rate limit
-                    await new Promise((r) => setTimeout(r, 300));
+                    await new Promise((r) => setTimeout(r, interval));
                 }
             }
         </script>
