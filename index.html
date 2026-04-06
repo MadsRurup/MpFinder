@@ -104,14 +104,16 @@
                             </div>
 
                             <div id="dateForm" class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
+                                <div
+                                    class="d-flex justify-content-between align-items-center"
+                                >
                                     <label class="form-label"
                                         >Select Date & Time</label
                                     >
                                     <span
                                         ><label>Backwards</label>
                                         <input
-                                        onchange="backwards = !backwards"
+                                            onchange="backwards = !backwards"
                                             type="checkbox"
                                             id="backwards"
                                             checked
@@ -227,7 +229,7 @@
                     paragraf.innerHTML = "" + data.match.name + " " + link;
                     parent.appendChild(paragraf);
 
-                    document.getElementById("terminal").appendChild(parent);
+                    appendToTerminalScroll(parent);
                     if (
                         data.match.name.includes(
                             document.getElementById("lobbyName").value,
@@ -302,7 +304,7 @@
                     paragraf.innerHTML =
                         "Closing in on date. Currently at " + matchTimeStr;
                     parent.appendChild(paragraf);
-                    document.getElementById("terminal").appendChild(parent);
+                    appendToTerminalScroll(parent);
 
                     // skip invalid IDs
                     if (!matchTimeStr) {
@@ -333,7 +335,7 @@
                 const paragraf = document.createElement("p");
                 paragraf.innerHTML = "Found nearest match";
                 parent.appendChild(paragraf);
-                document.getElementById("terminal").appendChild(parent);
+                appendToTerminalScroll(parent);
                 return bestId;
             }
 
@@ -341,13 +343,15 @@
                 for (let i = 0; i < retries; i++) {
                     let currentId = null;
                     const selected = document.querySelector(
-                    'input[name="scrapeMethod"]:checked',
-                );
+                        'input[name="scrapeMethod"]:checked',
+                    );
                     if (backwards && selected.value == "date") {
                         currentId = start - i;
                         console.log("test");
-                    } else {currentId = start + i;}
-                    
+                    } else {
+                        currentId = start + i;
+                    }
+
                     const found = await checkMatch(currentId);
 
                     if (found) {
@@ -358,6 +362,28 @@
                     // small delay to avoid rate limit
                     await new Promise((r) => setTimeout(r, interval));
                 }
+            }
+            function appendToTerminalScroll(element) {
+                const terminal = document.getElementById("terminal");
+
+                // check if user is near bottom (within 5px)
+                const isAtBottom =
+                    terminal.scrollHeight -
+                        terminal.scrollTop -
+                        terminal.clientHeight <
+                    5;
+
+                console.log("Bottom:", isAtBottom);
+
+                appendToTerminal(element);
+
+                // only auto-scroll if already at bottom
+                if (isAtBottom) {
+                    terminal.scrollTop = terminal.scrollHeight;
+                }
+            }
+            function appendToTerminal(element) {
+                document.getElementById("terminal").appendChild(element);
             }
         </script>
     </body>
